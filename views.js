@@ -474,6 +474,42 @@ var keyPage = function () {
   screen.appendChild(hyperscroll(content))
 }
 
+
+function friendsStream (src) {
+
+  var screen = document.getElementById('screen')
+  var content = h('div.content')
+
+  screen.appendChild(hyperscroll(content))
+
+  function createStream (opts) {
+    return pull(
+      Next(sbot.query, opts, ['value', 'timestamp']),
+      pull.map(function (msg) {
+        sbot.friends.get({source: src, dest: msg.value.author}, function (err, data) {
+          if (data === true) {
+            return content.appendChild(render(msg))
+            console.log(msg)
+          } else { 
+            return content.appendChild(h('div'))
+          }
+        })
+      })
+    )
+  }
+
+  pull(
+    createStream({
+      limit: 1000,
+      reverse: true,
+      live: false,
+      query: [{$filter: { value: { timestamp: { $gt: 0 }}}}]    
+    }),
+    stream.bottom(content)
+  )
+
+}
+
 function everythingStream () {
 
   var screen = document.getElementById('screen')
@@ -515,7 +551,13 @@ function everythingStream () {
     }),
     stream.top(content)
   )
+
+
+
 }
+
+
+
 
 function backchannel () {
 
@@ -615,6 +657,8 @@ module.exports = function () {
     msgThread(src)
   } else if (ref.isFeed(src.substring(5))) {
     mentionsStream(src.substring(5))
+  } else if (ref.isFeed(src.substring(8))) {
+    friendsStream(src.substring(8))
   } else if (src == 'queue') {
     queueStream()
   } else if (src == 'about') {
