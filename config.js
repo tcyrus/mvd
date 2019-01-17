@@ -22,14 +22,14 @@ module.exports = function () {
       location.reload()
     }, 1000)
   }
+  config.host = host
+  config.blobsUrl = host + '/blobs/get/'
+  config.emojiUrl = host + '/img/emoji/'
 
-  config.blobsUrl = 'http://localhost:8989/blobs/get/'
-  config.emojiUrl = 'http://localhost:8989/img/emoji/'
   if (config.address) {
     addies = config.address.split(';')
     config.remote = addies[1]
-    console.log(addies[1])
-  } 
+  }
 
   return config
 }
