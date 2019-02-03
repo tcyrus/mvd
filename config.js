@@ -3,7 +3,6 @@ var http = require('http')
 module.exports = function () {
   var host = window.location.origin
 
-  //var config = require('./config/inject')()
   function getConfig () {
     http.get(host + '/get-config', function (res) {
       res.on('data', function (data, remote) {
@@ -22,14 +21,14 @@ module.exports = function () {
       location.reload()
     }, 1000)
   }
-  config.host = host
+
   config.blobsUrl = host + '/blobs/get/'
   config.emojiUrl = host + '/img/emoji/'
 
-  if (config.address) {
-    addies = config.address.split(';')
-    config.remote = addies[1]
-  }
+  if (config.ws.remote)
+    config.remote = config.ws.remote
+  else
+    config.remote = config.address
 
   return config
 }
