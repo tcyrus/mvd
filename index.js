@@ -1,18 +1,18 @@
-var h = require('hyperscript')
-var route = require('./views')
-var avatar = require('./avatar')
+const h = require('hyperscript'),
+      route = require('./views'),
+      avatar = require('./avatar')
 
-var compose = require('./compose')
+const compose = require('./compose')
 
-var id = require('./keys').id
+const id = require('./keys').id
 
 document.head.appendChild(h('style', require('./style.css.json')))
 
-var screen = h('div#screen')
+const screen = h('div#screen')
 
-var search = h('input.search', {placeholder: 'Search'})
+const search = h('input.search', {placeholder: 'Search'})
 
-var nav = h('div.navbar',
+const nav = h('div.navbar',
   h('div.internal',
     h('li', h('a', {href: '#' + id}, h('span.avatar--small', avatar.image(id)))),
     h('li', h('a', {href: '#' + id}, avatar.name(id))),
@@ -20,10 +20,9 @@ var nav = h('div.navbar',
       onclick: function () {
         if (document.getElementById('composer')) { return }
         else {
-          var currentScreen = document.getElementById('screen')
-          var opts = {}
-          opts.type = 'post'
-          var composer = h('div.content#composer', h('div.message', compose(opts)))
+          const currentScreen = document.getElementById('screen')
+          const opts = {'type': 'post'}
+          const composer = h('div.content#composer', h('div.message', compose(opts)))
           if (currentScreen.firstChild.firstChild) {
             currentScreen.firstChild.insertBefore(composer, currentScreen.firstChild.firstChild)
           } else {
@@ -36,10 +35,9 @@ var nav = h('div.navbar',
       onclick: function () {
         if (document.getElementById('composer')) { return }
         else {
-          var currentScreen = document.getElementById('screen')
-          var opts = {}
-          opts.type = 'wiki'
-          var composer = h('div.content#composer', h('div.message', compose(opts)))
+          const currentScreen = document.getElementById('screen')
+          const opts = {'type': 'wiki'}
+          const composer = h('div.content#composer', h('div.message', compose(opts)))
           if (currentScreen.firstChild.firstChild) {
             currentScreen.firstChild.insertBefore(composer, currentScreen.firstChild.firstChild)
           } else {
@@ -57,7 +55,7 @@ var nav = h('div.navbar',
     h('li.right', h('a', {href: '#about'}, '?')),
     h('form.search', { 
       onsubmit: function (e) {
-        if (search.value[0] == '#')
+        if (search.value[0] === '#')
           window.location.hash = '#' + search.value
         else
           window.location.hash = '?' + search.value
@@ -73,9 +71,8 @@ document.body.appendChild(screen)
 route()
 
 window.onhashchange = function () {
-  var oldscreen = document.getElementById('screen')
-  var newscreen = h('div#screen')
+  const oldscreen = document.getElementById('screen')
+  const newscreen = h('div#screen')
   oldscreen.parentNode.replaceChild(newscreen, oldscreen)
   route()
 }
-
